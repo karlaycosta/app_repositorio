@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/main_card.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -9,8 +11,21 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int selectedIndex = -1;
+  bool light1 = true;
+
+  final WidgetStateProperty<Icon?> thumbIcon =
+      WidgetStateProperty.resolveWith<Icon?>(
+    (Set<WidgetState> states) {
+      if (states.contains(WidgetState.selected)) {
+        return const Icon(Icons.grid_view_outlined);
+      }
+      return const Icon(Icons.grid_view);
+    },
+  );
+
   @override
   Widget build(BuildContext context) {
+    print('Tela Redesenhada...');
     return Scaffold(
       appBar: AppBar(
         title: const Text('Hive'),
@@ -54,7 +69,7 @@ class _HomePageState extends State<HomePage> {
                       size: 64,
                     ),
                   ),
-                   Text(
+                  Text(
                     'Deriks Karlay',
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.onSecondary,
@@ -89,11 +104,32 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      body: const Center(
-        child: Text('Olá mundo!'),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+      body: Center(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Switch(
+                thumbIcon: thumbIcon,
+                value: light1,
+                onChanged: (bool value) {
+                  setState(() {
+                    light1 = value;
+                  });
+                },
+              ),
+              ConstrainedBox(
+                constraints: const BoxConstraints(
+                  maxWidth: 900,
+                ),
+                child: Wrap(
+                  children: [
+                    for (int i = 0; i < 10; i++) const MainCard(),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

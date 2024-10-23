@@ -11,9 +11,9 @@ class App extends StatelessWidget {
     return MaterialApp(
       // debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorSchemeSeed: Colors.blue,
+        colorSchemeSeed: Colors.white,
       ),
-      home: HomePage(),
+      home: const HomePage(),
     );
   }
 }
