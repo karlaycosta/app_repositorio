@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../widgets/main_card.dart';
+import '../widgets/main_card_list.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,20 +13,11 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int selectedIndex = -1;
   bool light1 = true;
-
-  final WidgetStateProperty<Icon?> thumbIcon =
-      WidgetStateProperty.resolveWith<Icon?>(
-    (Set<WidgetState> states) {
-      if (states.contains(WidgetState.selected)) {
-        return const Icon(Icons.grid_view_outlined);
-      }
-      return const Icon(Icons.grid_view);
-    },
-  );
+  int selectedSegment = 0;
 
   @override
   Widget build(BuildContext context) {
-    print('Tela Redesenhada...');
+    debugPrint('Tela Redesenhada...');
     return Scaffold(
       appBar: AppBar(
         title: const Text('Hive'),
@@ -107,13 +99,24 @@ class _HomePageState extends State<HomePage> {
       body: Center(
         child: SingleChildScrollView(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Switch(
-                thumbIcon: thumbIcon,
-                value: light1,
-                onChanged: (bool value) {
+              SegmentedButton<int>(
+                showSelectedIcon: false,
+                segments: const [
+                  ButtonSegment(
+                      value: 0,
+                      label: Text('Grade'),
+                      icon: Icon(Icons.grid_view_rounded)),
+                  ButtonSegment(
+                      value: 1,
+                      label: Text('Lista'),
+                      icon: Icon(Icons.dns_rounded)),
+                ],
+                selected: {selectedSegment},
+                onSelectionChanged: (newSelection) {
                   setState(() {
-                    light1 = value;
+                    selectedSegment = newSelection.first;
                   });
                 },
               ),
@@ -123,7 +126,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 child: Wrap(
                   children: [
-                    for (int i = 0; i < 10; i++) const MainCard(),
+                    for (int i = 0; i < 10; i++) selectedSegment == 0 ? const MainCard() : const MainCardList(),
                   ],
                 ),
               ),
@@ -135,6 +138,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   void onItemTapped(int index) => setState(() {
-        this.selectedIndex = index;
+        selectedIndex = index;
       });
 }
