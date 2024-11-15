@@ -15,6 +15,14 @@ class _HomePageState extends State<HomePage> {
   bool light1 = true;
   int selectedSegment = 0;
 
+  final filtersName = <String>{
+    'Programação',
+    'Banco de Dados',
+    'Redes',
+    'Internet'
+  };
+  final filters = <String>{};
+
   @override
   Widget build(BuildContext context) {
     debugPrint('Tela Redesenhada...');
@@ -96,42 +104,84 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SegmentedButton<int>(
-                showSelectedIcon: false,
-                segments: const [
-                  ButtonSegment(
-                      value: 0,
-                      label: Text('Grade'),
-                      icon: Icon(Icons.grid_view_rounded)),
-                  ButtonSegment(
-                      value: 1,
-                      label: Text('Lista'),
-                      icon: Icon(Icons.dns_rounded)),
-                ],
-                selected: {selectedSegment},
-                onSelectionChanged: (newSelection) {
-                  setState(() {
-                    selectedSegment = newSelection.first;
-                  });
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Ink(
+              color: Colors.grey,
+              height: 100,
+              width: double.maxFinite,
+              child: Center(
+                child: const Text(
+                  'Projetos Integradores',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 28,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 40,
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: filtersName.length,
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) {
+                  final item = filtersName.elementAt(index);
+                  return FilterChip(
+                    label: Text(item),
+                    selected: filters.contains(item),
+                    onSelected: (value) {
+                      setState(() {
+                        if (value) {
+                          filters.add(item);
+                        } else {
+                          filters.remove(item);
+                        }
+                      });
+                    },
+                  );
                 },
               ),
-              ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxWidth: 900,
-                ),
-                child: Wrap(
-                  children: [
-                    for (int i = 0; i < 10; i++) selectedSegment == 0 ? const MainCard() : const MainCardList(),
+            ),
+            Row(
+              children: [
+                SegmentedButton<int>(
+                  showSelectedIcon: false,
+                  segments: const [
+                    ButtonSegment(
+                        value: 0,
+                        label: Text('Grade'),
+                        icon: Icon(Icons.grid_view_rounded)),
+                    ButtonSegment(
+                        value: 1,
+                        label: Text('Lista'),
+                        icon: Icon(Icons.dns_rounded)),
                   ],
+                  selected: {selectedSegment},
+                  onSelectionChanged: (newSelection) {
+                    setState(() {
+                      selectedSegment = newSelection.first;
+                    });
+                  },
                 ),
+              ],
+            ),
+            ConstrainedBox(
+              constraints: const BoxConstraints(
+                maxWidth: 900,
               ),
-            ],
-          ),
+              child: Wrap(
+                children: [
+                  for (int i = 0; i < 10; i++)
+                    selectedSegment == 0
+                        ? const MainCard()
+                        : const MainCardList(),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
