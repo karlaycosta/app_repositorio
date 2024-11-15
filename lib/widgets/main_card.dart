@@ -1,7 +1,18 @@
+import 'dart:io';
+
+import 'package:app_repositorio/utils.dart';
 import 'package:flutter/material.dart';
 
 class MainCard extends StatefulWidget {
-  const MainCard({super.key});
+  final String name;
+  final String description;
+  final String image;
+  const MainCard({
+    super.key,
+    required this.image,
+    required this.name,
+    required this.description,
+  });
 
   @override
   State<MainCard> createState() => _MainCardState();
@@ -9,6 +20,7 @@ class MainCard extends StatefulWidget {
 
 class _MainCardState extends State<MainCard> {
   bool heart = false;
+
   @override
   Widget build(BuildContext context) {
     return ConstrainedBox(
@@ -17,39 +29,54 @@ class _MainCardState extends State<MainCard> {
         children: [
           Card(
             clipBehavior: Clip.antiAlias,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  height: 200,
-                  color: Colors.grey,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Nome do projeto',
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+            child: SizedBox(
+              height: 350,
+              child: Column(
+                children: [
+                  Container(
+                    height: 200,
+                    color: Colors.grey,
+                    child: Image.file(
+                      File(widget.image),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          IconButton(
-                            onPressed: () {
-                              setState(() => heart = !heart);
-                            },
-                            icon: Icon(
-                              heart ? Icons.favorite : Icons.favorite_outline,
+                          Text(
+                            widget.name,
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                          Expanded(
+                            child: Text(
+                              widget.description.corte(100),
+                              style: Theme.of(context).textTheme.bodyMedium,
+                              textAlign: TextAlign.justify,
                             ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  setState(() => heart = !heart);
+                                },
+                                icon: Icon(
+                                  heart ? Icons.favorite : Icons.favorite_outline,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
           if (heart)

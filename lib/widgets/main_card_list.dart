@@ -1,7 +1,18 @@
+import 'dart:io';
+
+import 'package:app_repositorio/utils.dart';
 import 'package:flutter/material.dart';
 
 class MainCardList extends StatefulWidget {
-  const MainCardList({super.key});
+  final String name;
+  final String description;
+  final String image;
+  const MainCardList({
+    super.key,
+    required this.image,
+    required this.name,
+    required this.description,
+  });
 
   @override
   State<MainCardList> createState() => _MainCardListState();
@@ -13,7 +24,6 @@ class _MainCardListState extends State<MainCardList> {
   Widget build(BuildContext context) {
     return ConstrainedBox(
       constraints: const BoxConstraints(maxWidth: 500, minWidth: 300),
-
       child: Stack(
         children: [
           Card(
@@ -22,9 +32,13 @@ class _MainCardListState extends State<MainCardList> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
-                  width: 120,
-                  height: 100,
+                  width: 160,
+                  height: 120,
                   color: Colors.grey,
+                  child: Image.file(
+                    File(widget.image),
+                    fit: BoxFit.cover,
+                  ),
                 ),
                 Expanded(
                   child: Padding(
@@ -33,9 +47,14 @@ class _MainCardListState extends State<MainCardList> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Nome do projeto 123 Nome do projeto 123',
+                          widget.name,
                           style: Theme.of(context).textTheme.titleMedium,
                           overflow: TextOverflow.clip,
+                        ),
+                        Text(
+                          widget.description.corte(80),
+                          style: Theme.of(context).textTheme.bodyMedium,
+                          textAlign: TextAlign.justify,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,

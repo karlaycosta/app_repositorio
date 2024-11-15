@@ -10,10 +10,39 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
+typedef Projetos = ({
+  String nome,
+  String descricao,
+  String imagem,
+});
+
 class _HomePageState extends State<HomePage> {
   int selectedIndex = -1;
   bool light1 = true;
   int selectedSegment = 0;
+
+  final projetos = <Projetos>[
+    (
+      nome: 'Projeto 123',
+      descricao: 'Descrição do projeto 01 Descrição do projeto 01 Descrição do projeto 01 Descrição do projeto 01',
+      imagem: 'images/01.jpg'
+    ),
+    (
+      nome: 'Projeto 02',
+      descricao: 'Descrição do projeto 02',
+      imagem: 'images/02.jpg'
+    ),
+    (
+      nome: 'Projeto 03',
+      descricao: 'Descrição do projeto 03',
+      imagem: 'images/01.jpg'
+    ),
+    (
+      nome: 'Projeto 04',
+      descricao: 'Descrição do projeto 03',
+      imagem: 'images/02.jpg'
+    ),
+  ];
 
   final filtersName = <String>{
     'Programação',
@@ -174,10 +203,19 @@ class _HomePageState extends State<HomePage> {
               ),
               child: Wrap(
                 children: [
-                  for (int i = 0; i < 10; i++)
-                    selectedSegment == 0
-                        ? const MainCard()
-                        : const MainCardList(),
+                  ...projetos.map((projeto) {
+                    return selectedSegment == 0
+                        ? MainCard(
+                            name: projeto.nome,
+                            description: projeto.descricao,
+                            image: projeto.imagem,
+                          )
+                        : MainCardList(
+                            name: projeto.nome,
+                            description: projeto.descricao,
+                            image: projeto.imagem,
+                          );
+                  }),
                 ],
               ),
             ),
