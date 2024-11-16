@@ -1,6 +1,3 @@
-import 'dart:io';
-
-import 'package:app_repositorio/utils.dart';
 import 'package:flutter/material.dart';
 
 class MainCard extends StatefulWidget {
@@ -24,58 +21,63 @@ class _MainCardState extends State<MainCard> {
   @override
   Widget build(BuildContext context) {
     return ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 300),
+      constraints: const BoxConstraints(
+        maxWidth: 200,
+        maxHeight: 350,
+        minHeight: 350,
+      ),
       child: Stack(
         children: [
           Card(
             clipBehavior: Clip.antiAlias,
-            child: SizedBox(
-              height: 350,
-              child: Column(
-                children: [
-                  Container(
-                    height: 200,
-                    color: Colors.grey,
-                    child: Image.file(
-                      File(widget.image),
-                      fit: BoxFit.cover,
+            child: Column(
+              children: [
+                Container(
+                  height: 200,
+                  width: 200,
+                  color: Colors.grey,
+                  child: Image.asset(
+                    widget.image,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    width: 200,
+                    padding: const EdgeInsets.all(8),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.name,
+                          style: Theme.of(context).textTheme.titleMedium,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                        ),
+                        Text(
+                          widget.description,
+                          style: TextStyle(height: 1.2),
+                          textAlign: TextAlign.justify,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 3,
+                        ),
+                      ],
                     ),
                   ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            widget.name,
-                            style: Theme.of(context).textTheme.titleMedium,
-                          ),
-                          Expanded(
-                            child: Text(
-                              widget.description.corte(100),
-                              style: Theme.of(context).textTheme.bodyMedium,
-                              textAlign: TextAlign.justify,
-                            ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              IconButton(
-                                onPressed: () {
-                                  setState(() => heart = !heart);
-                                },
-                                icon: Icon(
-                                  heart ? Icons.favorite : Icons.favorite_outline,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+                ),
+              ],
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            right: 4,
+            child: IconButton(
+              onPressed: () {
+                setState(() => heart = !heart);
+              },
+              icon: Icon(
+                color: heart ? Colors.red : null,
+                heart ? Icons.favorite : Icons.favorite_outline,
               ),
             ),
           ),

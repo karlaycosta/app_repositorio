@@ -1,3 +1,5 @@
+import 'package:app_repositorio/utils.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/main_card.dart';
@@ -10,7 +12,7 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-typedef Projetos = ({
+typedef Projeto = ({
   String nome,
   String descricao,
   String imagem,
@@ -21,26 +23,27 @@ class _HomePageState extends State<HomePage> {
   bool light1 = true;
   int selectedSegment = 0;
 
-  final projetos = <Projetos>[
+  final projetos = <Projeto>[
     (
-      nome: 'Projeto 123',
-      descricao: 'Descrição do projeto 01 Descrição do projeto 01 Descrição do projeto 01 Descrição do projeto 01',
-      imagem: 'images/01.jpg'
+      nome: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      descricao:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent quis fermentum elit. Suspendisse eleifend auctor nisl, in blandit nulla porttitor non. Duis eget venenatis eros, ac mattis magna. Fusce tortor mauris, interdum vel rhoncus vitae, semper eleifend libero. Cras sapien est, gravida ac elit nec, egestas commodo enim.',
+      imagem: 'assets/images/01.jpg'
     ),
     (
       nome: 'Projeto 02',
       descricao: 'Descrição do projeto 02',
-      imagem: 'images/02.jpg'
+      imagem: 'assets/images/02.jpg'
     ),
     (
       nome: 'Projeto 03',
       descricao: 'Descrição do projeto 03',
-      imagem: 'images/01.jpg'
+      imagem: 'assets/images/01.jpg'
     ),
     (
       nome: 'Projeto 04',
       descricao: 'Descrição do projeto 03',
-      imagem: 'images/02.jpg'
+      imagem: 'assets/images/02.jpg'
     ),
   ];
 
@@ -136,40 +139,58 @@ class _HomePageState extends State<HomePage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Ink(
-              color: Colors.grey,
-              height: 100,
-              width: double.maxFinite,
-              child: Center(
-                child: const Text(
-                  'Projetos Integradores',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 28,
-                  ),
-                ),
+            // Ink(
+            //   color: Colors.grey,
+            //   height: 100,
+            //   width: double.maxFinite,
+            //   child: Center(
+            //     child: const Text(
+            //       'Projetos Integradores',
+            //       style: TextStyle(
+            //         color: Colors.white,
+            //         fontSize: 28,
+            //       ),
+            //     ),
+            //   ),
+            // ),
+            CarouselSlider(
+              items: projetos.take(5).map(ImageSlide.new).toList(),
+              options: CarouselOptions(
+                height: 200,
+                autoPlay: true,
+                viewportFraction: 0.6,
+                enlargeFactor: 0.2,
+                enlargeCenterPage: true,
+                enableInfiniteScroll: true,
+                onPageChanged: (index, reason) {
+                  // Optional callback when the page changes
+                  // You can use it to update any additional UI components
+                },
               ),
             ),
             SizedBox(
-              height: 40,
+              height: 50,
               child: ListView.builder(
                 shrinkWrap: true,
                 itemCount: filtersName.length,
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) {
                   final item = filtersName.elementAt(index);
-                  return FilterChip(
-                    label: Text(item),
-                    selected: filters.contains(item),
-                    onSelected: (value) {
-                      setState(() {
-                        if (value) {
-                          filters.add(item);
-                        } else {
-                          filters.remove(item);
-                        }
-                      });
-                    },
+                  return Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: FilterChip(
+                      label: Text(item),
+                      selected: filters.contains(item),
+                      onSelected: (value) {
+                        setState(() {
+                          if (value) {
+                            filters.add(item);
+                          } else {
+                            filters.remove(item);
+                          }
+                        });
+                      },
+                    ),
                   );
                 },
               ),
@@ -228,4 +249,42 @@ class _HomePageState extends State<HomePage> {
   void onItemTapped(int index) => setState(() {
         selectedIndex = index;
       });
+}
+
+class ImageSlide extends StatelessWidget {
+  const ImageSlide(this.projeto, {super.key});
+
+  final Projeto projeto;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      alignment: AlignmentDirectional.topCenter,
+      children: [
+        Image.asset(
+          height: 200,
+          projeto.imagem,
+          fit: BoxFit.cover,
+        ),
+        Positioned(
+          bottom: 2,
+          child: Text(
+            projeto.nome.corte(15),
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              shadows: [
+                Shadow(
+                  blurRadius: 2,
+                  color: Colors.black54,
+                  offset: Offset(1, 1),
+                ),
+              ],
+            ),
+          ),
+        )
+      ],
+    );
+  }
 }
